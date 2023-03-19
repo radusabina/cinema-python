@@ -1,0 +1,18 @@
+{
+  "1": {
+    "py/object": "Domain.film.Film",
+    "idEntitate": "1",
+    "titlu": "Film1",
+    "anAparitie": 1997,
+    "pretBilet": 15.0,
+    "inProgram": "da"
+  },
+  "2": {
+    "py/object": "Domain.film.Film",
+    "idEntitate": "2",
+    "titlu": "Film2",
+    "anAparitie": 2000,
+    "pretBilet": 19.99,
+    "inProgram": "da"
+  }
+}
