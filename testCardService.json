@@ -1,0 +1,32 @@
+{
+  "1": {
+    "py/object": "Domain.clientCard.ClientCard",
+    "idEntity": "1",
+    "name": "Nume1",
+    "surname": "Prenume1",
+    "CNP": "6023481397131",
+    "birthDate": "12.03.1999",
+    "registrationDate": "21.11.2021",
+    "points": 0
+  },
+  "2": {
+    "py/object": "Domain.clientCard.ClientCard",
+    "idEntity": "2",
+    "name": "Nume2",
+    "surname": "Prenume2",
+    "CNP": "6023748201382",
+    "birthDate": "17.12.1867",
+    "registrationDate": "14.04.2020",
+    "points": 0
+  },
+  "3": {
+    "py/object": "Domain.clientCard.ClientCard",
+    "idEntity": "3",
+    "name": "Nume3",
+    "surname": "Prenume3",
+    "CNP": "5130193018319",
+    "birthDate": "15.01.2000",
+    "registrationDate": "20.12.2020",
+    "points": 0
+  }
+}

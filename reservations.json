@@ -1,0 +1,10 @@
+{
+  "1": {
+    "py/object": "Domain.reservation.Reservation",
+    "idEntity": "1",
+    "idMovie": "1",
+    "idClientCard": "1",
+    "date": "25.04.2023",
+    "hour": "18:00"
+  }
+}

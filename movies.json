@@ -1,0 +1,10 @@
+{
+  "1": {
+    "py/object": "Domain.movie.Movie",
+    "idEntity": "1",
+    "title": "movie 1",
+    "releaseYear": 2022,
+    "ticketPrice": 35.0,
+    "inProgram": "yes"
+  }
+}

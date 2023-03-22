@@ -1,0 +1,26 @@
+{
+  "1": {
+    "py/object": "Domain.reservation.Reservation",
+    "idEntity": "1",
+    "idMovie": "2",
+    "idClientCard": "0",
+    "date": "12.03.2021",
+    "hour": "14:00"
+  },
+  "2": {
+    "py/object": "Domain.reservation.Reservation",
+    "idEntity": "2",
+    "idMovie": "2",
+    "idClientCard": "0",
+    "date": "17.12.2021",
+    "hour": "20:00"
+  },
+  "3": {
+    "py/object": "Domain.reservation.Reservation",
+    "idEntity": "3",
+    "idMovie": "2",
+    "idClientCard": "0",
+    "date": "04.01.2021",
+    "hour": "18:00"
+  }
+}

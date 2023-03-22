@@ -1,0 +1,18 @@
+{
+  "1": {
+    "py/object": "Domain.movie.Movie",
+    "idEntity": "1",
+    "title": "Film1",
+    "releaseYear": 1997,
+    "ticketPrice": 15.0,
+    "inProgram": "yes"
+  },
+  "2": {
+    "py/object": "Domain.movie.Movie",
+    "idEntity": "2",
+    "title": "Film2",
+    "releaseYear": 2000,
+    "ticketPrice": 19.99,
+    "inProgram": "yes"
+  }
+}
