@@ -89,11 +89,11 @@ class ClientCardService:
         oldCards = {}
         newCards = {}
         result = []
-        if data1 > data2: data1, data2 = data2, data1
-        cardsToUpdate = list(filter(lambda x: x if data1 <= datetime.strptime(x.dataNasterii, "%d.%m.%Y")
+        if data1 > data2:data1, data2 = data2, data1
+        cardsToUpdate = list(filter(lambda x: x if data1 <= datetime.strptime(x.birthDate, "%d.%m.%Y")
                                     <= data2 else None, self.cardRepository.read()))
         for card in cardsToUpdate:
-            oldCard = self.cardRepository.read(card.idEntitate)
+            oldCard = self.cardRepository.read(card.idEntity)
             oldCards[oldCard.idEntity] = oldCard
 
             card.points += value

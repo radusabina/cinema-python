@@ -1,83 +1,79 @@
 import datetime
 
-from Service.cardClientService import CardClientService
-from Service.filmGenerator import FilmGenerator
-from Service.filmService import FilmService
-from Service.rezervareService import RezervareService
+from Service.clientCardService import ClientCardService
+from Service.movieGenerator import MovieGenerator
+from Service.movieService import MovieService
+from Service.reservationService import ReservationService
 from Service.undoRedoService import UndoRedoService
 
 
 class Console:
 
-    def __init__(self, filmService: FilmService,
-                 cardService: CardClientService,
-                 rezervareService: RezervareService,
-                 filmGenerator: FilmGenerator,
+    def __init__(self, movieService: MovieService, cardService: ClientCardService,
+                 reservationService: ReservationService, movieGenerator: MovieGenerator,
                  undoRedoService: UndoRedoService):
-        self.filmService = filmService
+        self.movieService = movieService
         self.cardService = cardService
-        self.rezervareService = rezervareService
-        self.filmGenerator = filmGenerator
+        self.reservationService = reservationService
+        self.movieGenerator = movieGenerator
         self.undoRedoService = undoRedoService
 
     def runMenu(self):
         while True:
-            print("1. CRUD film")
-            print("2. CRUD card client")
-            print("3. CRUD rezervare")
-            print("4. Functionalitati")
+            print("1. CRUD movie")
+            print("2. CRUD client card")
+            print("3. CRUD reservation")
+            print("4. Functionalities")
             print("u. Undo")
             print("r. Redo")
-            print("x. Iesire")
-            optiune = input("Dati optiunea: ")
-            if optiune == "1":
-                self.uiRunCrudFilmMenu()
-            elif optiune == "2":
+            print("x. Exit")
+            option = input("Enter an option: ")
+            if option == "1":
+                self.uiRunCrudMovieMenu()
+            elif option == "2":
                 self.uiRunCrudCardMenu()
-            elif optiune == "3":
-                self.uiRunCrudRezervareMenu()
-            elif optiune == "4":
-                self.uiFunctionalitatiMenu()
-            elif optiune.lower() == "u":
+            elif option == "3":
+                self.uiRunCrudReservationMenu()
+            elif option == "4":
+                self.uiFunctionalitiesMenu()
+            elif option.lower() == "u":
                 self.undoRedoService.undo()
-            elif optiune.lower() == "r":
+            elif option.lower() == "r":
                 self.undoRedoService.redo()
-            elif optiune.lower() == "x":
+            elif option.lower() == "x":
                 break
             else:
-                print("Optiune gresita! Reincercati :)")
+                print("Wrong option, please retry!")
 
-    def uiRunCrudFilmMenu(self):
+    def uiRunCrudMovieMenu(self):
         while True:
-            print("1. Adauga film")
-            print("2. Sterge film")
-            print("3. Modifica film")
-            print("a. Afiseaza filme")
-            print("x. Iesire")
-            optiune = input("Dati optiunea: ")
-            if optiune == "1":
-                self.uiAdaugaFilm()
-            elif optiune == "2":
-                self.uiStergeFilm()
-            elif optiune == "3":
-                self.uiModificaFilm()
-            elif optiune.lower() == "a":
-                self.uiShowallFilme()
-            elif optiune.lower() == "x":
+            print("1. Add movie")
+            print("2. Delete movie")
+            print("3. Update movie")
+            print("a. Show all movies")
+            print("x. Exit")
+            option = input("Enter an option: ")
+            if option == "1":
+                self.uiAddMovie()
+            elif option == "2":
+                self.uiDeleteMovie()
+            elif option == "3":
+                self.uiUpdateMovie()
+            elif option.lower() == "a":
+                self.uiShowallMovies()
+            elif option.lower() == "x":
                 break
             else:
-                print("Optiune gresita! Reincercati")
+                print("Wrong option, please retry!")
 
-    def uiAdaugaFilm(self):
+    def uiAddMovie(self):
         try:
-            idEntitate = input("Dati id-ul filmului: ")
-            titlu = input("Dati titlul filmului: ")
-            anAparitie = int(input("Dati anul aparitiei filmului: "))
-            pretBilet = float(input("Dati pretul biletului: "))
-            inProgram = input("Specificati daca filmul"
-                              " este in program (da/nu): ")
-            self.filmService.adaugaFilm(idEntitate, titlu, anAparitie,
-                                        pretBilet, inProgram)
+            idEntity = input("Enter the movie id: ")
+            title = input("Enter the movie title: ")
+            releaseYear = int(input("Enter the movie's release year: "))
+            ticketPrice = float(input("Enter the movie's ticket price: "))
+            inProgram = input("Enter if the movie is in program or not (yes/no): ")
+            self.movieService.addMovie(idEntity, title, releaseYear, ticketPrice, inProgram)
         except KeyError as ke:
             print(ke)
         except ValueError as ve:
@@ -85,27 +81,23 @@ class Console:
         except Exception as e:
             print(e)
 
-    def uiStergeFilm(self):
+    def uiDeleteMovie(self):
         try:
-            idEntitate = input("Dati id-ul filmului "
-                               "pe care doriti sa-l stergeti: ")
-            self.filmService.stergeFilm(idEntitate)
+            idEntity = input("Enter the movie's id you want to delete: ")
+            self.movieService.deleteMovie(idEntity)
         except KeyError as ke:
             print(ke)
         except Exception as e:
             print(e)
 
-    def uiModificaFilm(self):
+    def uiUpdateMovie(self):
         try:
-            idEntitate = input("Dati id-ul filmului pe care"
-                               " doriti sa-l modificati: ")
-            titlu = input("Dati noul titlu al filmului: ")
-            anAparitie = int(input("Dati noul an al aparitiei filmului: "))
-            pretBilet = float(input("Dati noul pret al biletului: "))
-            inProgram = input("Specificati daca noul film "
-                              "este in program (da/nu): ")
-            self.filmService.modificaFilm(idEntitate, titlu,
-                                          anAparitie, pretBilet, inProgram)
+            idEntity = input("Enter the new movie id: ")
+            title = input("Enter the new movie title: ")
+            releaseYear = int(input("Enter the new movie's release year: "))
+            ticketPrice = float(input("Enter the new movie's ticket price: "))
+            inProgram = input("Enter if the movie is in program or not (yes/no): ")
+            self.movieService.updateMovie(idEntity, title, releaseYear, ticketPrice, inProgram)
         except KeyError as ke:
             print(ke)
         except ValueError as ve:
@@ -113,52 +105,44 @@ class Console:
         except Exception as e:
             print(e)
 
-    def uiShowallFilme(self):
-        for film in self.filmService.getAll():
-            print(film)
+    def uiShowallMovies(self):
+        for movie in self.movieService.getAll():
+            print(movie)
 
     def uiRunCrudCardMenu(self):
         while True:
-            print("1. Adauga card client")
-            print("2. Sterge card client")
-            print("3. Modifica card client")
-            print("a. Afiseaza carduri")
-            print("x. Iesire")
-            optiune = input("Dati optiunea: ")
-            if optiune == "1":
-                self.uiAdaugaCard()
-            elif optiune == "2":
-                self.uiStergeCard()
-            elif optiune == "3":
-                self.uiModificaCard()
-            elif optiune.lower() == "a":
-                self.uiShowallCarduri()
-            elif optiune.lower() == "x":
+            print("1. Add client card")
+            print("2. Delete client card")
+            print("3. Update client card")
+            print("a. Show all cards")
+            print("x. Exit")
+            option = input("Enter an option: ")
+            if option == "1":
+                self.uiAddCard()
+            elif option == "2":
+                self.uiDeleteCard()
+            elif option == "3":
+                self.uiUpdateCard()
+            elif option.lower() == "a":
+                self.uiShowallCards()
+            elif option.lower() == "x":
                 break
             else:
-                print("Optiune gresita! Reincercati")
+                print("Wrong option, please retry!")
 
-    def uiAdaugaCard(self):
+    def uiAddCard(self):
         try:
-            idEntitate = input("Dati id-ul cardului: ")
-            nume = input("Dati numele clientului: ")
-            prenume = input("Dati prenumele clientului: ")
-            CNP = input("Dati CNP-ul: ")
-            dataNasterii = datetime.datetime.strptime(input(
-                "Dati data nasterii clientului(DD.MM.YYYY): "), "%d.%m.%Y")
-            dataNasteriiString = datetime.datetime.strftime(
-                dataNasterii, "%d.%m.%Y")
-            dataInregistrarii = datetime.datetime.strptime(input(
-                "Dati data inregistrarii clientului(DD.MM.YYYY): "),
-                "%d.%m.%Y")
-            dataInregistrariiString = datetime.datetime.strftime(
-                dataInregistrarii, "%d.%m.%Y")
-            puncteCumulate = int(input("Dati numarul de puncte"
-                                       " cumulate pe card: "))
-            self.cardService.adaugaCard(idEntitate, nume, prenume, CNP,
-                                        dataNasteriiString,
-                                        dataInregistrariiString,
-                                        puncteCumulate)
+            idEntity = input("Enter the card id: ")
+            name = input("Enter the client's  name: ")
+            surname = input("Enter the client's surname: ")
+            CNP = input("Enter the CNP: ")
+            birthDate = datetime.datetime.strptime(input("Enter the client's birth date(DD.MM.YYYY): "), "%d.%m.%Y")
+            birthDateString = datetime.datetime.strftime(birthDate, "%d.%m.%Y")
+            registrationDate = datetime.datetime.strptime(input("Enter the card registration date(DD.MM.YYYY): "),
+                                                          "%d.%m.%Y")
+            registrationDateString = datetime.datetime.strftime(registrationDate, "%d.%m.%Y")
+            points = int(input("Enter the number of points on the card: "))
+            self.cardService.addCard(idEntity, name, surname, CNP, birthDateString, registrationDateString, points)
         except KeyError as ke:
             print(ke)
         except ValueError as ve:
@@ -166,39 +150,28 @@ class Console:
         except Exception as e:
             print(e)
 
-    def uiStergeCard(self):
+    def uiDeleteCard(self):
         try:
-            idEntitate = input("Dati id-ul cardului client "
-                               "pe care doriti sa-l stergeti: ")
-            self.cardService.stergeCard(idEntitate)
+            idEntity = input("Enter the card id that you want to delete: ")
+            self.cardService.deleteCard(idEntity)
         except KeyError as ke:
             print(ke)
         except Exception as e:
             print(e)
 
-    def uiModificaCard(self):
+    def uiUpdateCard(self):
         try:
-            id_card = input("Dati id-ul cardului pe care doriti"
-                            " sa-l modificati: ")
-            nume = input("Dati noul nume al clientului: ")
-            prenume = input("Dati noul prenume al clientului: ")
-            CNP = input("Dati noul CNP: ")
-            dataNasterii = datetime.datetime.strptime(input(
-                "Dati noua data a nasterii clientului(DD.MM.YYYY): "),
-                "%d.%m.%Y")
-            dataNasteriiString = datetime.datetime.strftime(
-                dataNasterii, "%d.%m.%Y")
-            dataInregistrarii = datetime.datetime.strptime(input(
-                "Dati noua data a inregistarii cardului(DD.MM.YYYY):"
-                " "), "%d.%m.%Y")
-            dataInregistrariiString = datetime.datetime.strftime(
-                dataInregistrarii, "%d.%m.%Y")
-            puncteCumulate = int(input("Dati numarul de puncte"
-                                       " cumulate pe card: "))
-            self.cardService.modificaCard(id_card, nume, prenume, CNP,
-                                          dataNasteriiString,
-                                          dataInregistrariiString,
-                                          puncteCumulate)
+            idEntity = input("Enter the card id: ")
+            name = input("Enter the new client's  name: ")
+            surname = input("Enter the new client's surname: ")
+            CNP = input("Enter the new CNP: ")
+            birthDate = datetime.datetime.strptime(input("Enter the client's birth date(DD.MM.YYYY): "), "%d.%m.%Y")
+            birthDateString = datetime.datetime.strftime(birthDate, "%d.%m.%Y")
+            registrationDate = datetime.datetime.strptime(input("Enter the card registration date(DD.MM.YYYY): "),
+                                                          "%d.%m.%Y")
+            registrationDateString = datetime.datetime.strftime(registrationDate, "%d.%m.%Y")
+            points = int(input("Enter the number of points on the card: "))
+            self.cardService.updateCard(idEntity, name, surname, CNP, birthDateString, registrationDateString, points)
         except KeyError as ke:
             print(ke)
         except ValueError as ve:
@@ -206,56 +179,46 @@ class Console:
         except Exception as e:
             print(e)
 
-    def uiShowallCarduri(self):
+    def uiShowallCards(self):
         for card in self.cardService.getAll():
             print(card)
 
-    def uiRunCrudRezervareMenu(self):
+    def uiRunCrudReservationMenu(self):
         while True:
-            print("1. Adauga rezervare")
-            print("2. Sterge rezervare")
-            print("3. Modifica rezervare")
-            print("a. Afisare rezervari")
-            print("x. Iesire")
-            optiune = input("Dati optiunea: ")
-            if optiune == "1":
-                self.uiAdaugaRezervare()
-            elif optiune == "2":
-                self.uiStergeRezervare()
-            elif optiune == "3":
-                self.uiModificaRezervare()
-            elif optiune.lower() == "a":
-                self.uiShowallRezervari()
-            elif optiune.lower() == "x":
+            print("1. Add reservation")
+            print("2. Delete reservation")
+            print("3. Update reservation")
+            print("a. Show all reservations")
+            print("x. Exit")
+            option = input("Enter an option: ")
+            if option == "1":
+                self.uiAddReservation()
+            elif option == "2":
+                self.uiDeleteReservation()
+            elif option == "3":
+                self.uiUpdateReservation()
+            elif option.lower() == "a":
+                self.uiShowallReservations()
+            elif option.lower() == "x":
                 break
             else:
-                print("Optiune gresita ! Reincercati")
+                print("Wrong option, please retry!")
 
-    def uiAdaugaRezervare(self):
+    def uiAddReservation(self):
         try:
-            idEntitate = input("Dati id-ul rezervarii: ")
-            idFilm = input("Dati id-ul filmului: ")
-            idCard = input("Dati id-ul cardului: ")
-            data = datetime.datetime.strptime(input("Dati data "
-                                                    "rezervarii "
-                                                    "(DD.MM.YYYY): "),
-                                              "%d.%m.%Y")
-            dataString = datetime.datetime.strftime(
-                data, "%d.%m.%Y")
-            ora = datetime.datetime.strptime(input("Dati ora rezervarii"
-                                                   " (HH:MM): "), "%H:%M")
-            oraString = datetime.datetime.strftime(ora, "%H:%M")
-            self.rezervareService.adaugaRezervare(idEntitate, idFilm,
-                                                  idCard, dataString,
-                                                  oraString)
+            idEntity = input("Enter the reservation id: ")
+            idMovie = input("Enter the movie id: ")
+            idCard = input("Enter the card id: ")
+            date = datetime.datetime.strptime(input("Enter the reservation date(DD.MM.YYYY): "), "%d.%m.%Y")
+            dateString = datetime.datetime.strftime(date, "%d.%m.%Y")
+            hour = datetime.datetime.strptime(input("Enter the reservation hour(HH:MM): "), "%H:%M")
+            hourString = datetime.datetime.strftime(hour, "%H:%M")
+            self.reservationService.addReservation(idEntity, idMovie, idCard, dateString, hourString)
             if idCard == "0":
-                print(f"Nu se primesc puncte pe card.")
+                print(f"No points added on the card.")
             else:
-                print(f"Pe cardul {idCard} s-au adaugat "
-                      f"{self.rezervareService.acumuleazaPuncte(idFilm)}"
-                      f" puncte. "
-                      f"Totalul este de "
-                      f"{self.cardService.getById(idCard).puncteCumulate}.")
+                print(f"On the card {idCard} were added {self.reservationService.acumulatePoints(idMovie)}"
+                      f" points. The total is {self.cardService.getById(idCard).points}.")
         except KeyError as ke:
             print(ke)
         except ValueError as ve:
@@ -263,42 +226,31 @@ class Console:
         except Exception as e:
             print(e)
 
-    def uiStergeRezervare(self):
+    def uiDeleteReservation(self):
         try:
-            idEntitate = input("Dati id-ul rezervarii pe care doriti"
-                               " sa o stergeti: ")
-            self.rezervareService.stergeRezervare(idEntitate)
+            idEntity = input("Enter the reservation's id that you want to delete: ")
+            self.reservationService.deleteReservation(idEntity)
         except KeyError as ke:
             print(ke)
         except Exception as e:
             print(e)
 
-    def uiModificaRezervare(self):
+    def uiUpdateReservation(self):
         try:
-            idEntitate = input("Dati id-u rezervarii pe care doriti "
-                               "sa o modificati: ")
-            idFilm = input("Dati noul id al filmului: ")
-            idCard = input("Dati noul id al cardului: ")
-            data = datetime.datetime.strptime(input("Dati data "
-                                                    "rezervarii "
-                                                    "(DD.MM.YYYY): "),
-                                              "%d.%m.%Y")
-            dataString = datetime.datetime.strftime(
-                data, "%d.%m.%Y")
-            ora = datetime.datetime.strptime(input("Dati ora rezervarii "
-                                                   "(HH:MM): "), "%H:%M")
-            oraString = datetime.datetime.strftime(ora, "%H:%M")
-            self.rezervareService.modificaRezervare(idEntitate, idFilm,
-                                                    idCard, dataString,
-                                                    oraString)
+            idEntity = input("Enter the reservation id: ")
+            idMovie = input("Enter the movie id: ")
+            idCard = input("Enter the card id: ")
+            date = datetime.datetime.strptime(input("Enter the reservation date(DD.MM.YYYY): "), "%d.%m.%Y")
+            dateString = datetime.datetime.strftime(date, "%d.%m.%Y")
+            hour = datetime.datetime.strptime(input("Enter the reservation hour(HH:MM): "), "%H:%M")
+            hourString = datetime.datetime.strftime(hour, "%H:%M")
+            self.reservationService.updateReservation(idEntity, idMovie, idCard, dateString, hourString)
             if idCard == "0":
-                print(f"Nu se primesc puncte pe card.")
+                print(f"No points added on the card.")
             else:
-                puncte = self.cardService.getById(idEntitate).puncteCumulate
-                print(f"Pe cardul {idCard} s-au adaugat "
-                      f"{self.rezervareService.acumuleazaPuncte(idEntitate)}"
-                      f" puncte. "
-                      f"Totalul este de {puncte}.")
+                points = self.cardService.getById(idEntity).points
+                print(f"On the card {idCard} were added {self.reservationService.acumulatePoints(idMovie)}"
+                      f" points. The total is {points}.")
         except KeyError as ke:
             print(ke)
         except ValueError as ve:
@@ -306,164 +258,138 @@ class Console:
         except Exception as e:
             print(e)
 
-    def uiShowallRezervari(self):
-        for rezervare in self.rezervareService.getAll():
-            print(rezervare)
+    def uiShowallReservations(self):
+        for reservation in self.reservationService.getAll():
+            print(reservation)
 
-    def uiOrdonareDescCarduriDupaPuncte(self):
-        if not self.cardService.ordonareDescCarduriDupaPuncte():
-            print("Nu exista carduri pe care sa le afisam !")
+    def uiOrderedCardsByPointsReverse(self):
+        if not self.cardService.orderedCardsByPointsReverse():
+            print("No cards to show.")
         else:
-            for card in self.cardService.ordonareDescCarduriDupaPuncte():
+            for card in self.cardService.orderedCardsByPointsReverse():
                 print(card)
 
-    def uiGenereazaFilmeRandom(self):
+    def uiGenerateRandomMovies(self):
         try:
-            n = int(input("Dati numarul de filme random "
-                          "care doriti sa fie generat: "))
-            self.filmGenerator.genereazaFilmeRandom(n)
-            for film in self.filmGenerator.getAll():
-                print(film)
+            n = int(input("Give the number of movies you want to generate: "))
+            self.movieGenerator.generateRandomMovies(n)
+            for movie in self.movieGenerator.getAll():
+                print(movie)
         except ValueError as ve:
             print(ve)
         except Exception as e:
             print(e)
 
-    def uiFunctionalitatiMenu(self):
+    def uiFunctionalitiesMenu(self):
         while True:
-            print("1. Căutare filme și clienți. Căutare full text.")
-            print("2. Afișarea tuturor rezervărilor dintr-un "
-                  "interval de ore dat, indiferent de zi.")
-            print("3. Afișarea filmelor ordonate descrescător după "
-                  "numărul de rezervări.")
-            print("4. Afișarea cardurilor client ordonate descrescător"
-                  " după numărul de puncte de pe card.")
-            print("5. Ștergerea tuturor rezervărilor dintr-un"
-                  " anumit interval de zile.")
-            print("6. Incrementarea cu o valoare dată a "
-                  "punctelor de pe toate cardurile "
-                  "a căror zi de naștere se află într-un interval dat.")
-            print("s. Stergere in cascada (filme).")
-            print("r. Genereaza filme random")
-            print("x. Iesire")
-            optiune = input("Dati optiunea: ")
-            if optiune == "1":
+            print("1. Search movies and card. Search full text.")
+            print("2. Show all reservations between two hours.")
+            print("3. Show movies ordered in reverse by the number of reservations.")
+            print("4. Show the cards ordered in reverse by the number of points.")
+            print("5. Delete reservations between two dates")
+            print("6. Add points to the cards that have the birthdate between two dates.")
+            print("s. Delete in cascade (movies).")
+            print("r. Generate random movies.")
+            print("x. Exit.")
+            option = input("Enter an option: ")
+            if option == "1":
                 while True:
-                    print("1. Cautare filme")
-                    print("2. Cautare clienti")
-                    print("x. Iesire")
-                    opt = input("Dati optiunea: ")
+                    print("1. Search movies")
+                    print("2. Search clients")
+                    print("x. Exit")
+                    opt = input("Enter an option: ")
                     if opt == "1":
-                        string = input("Dati sirul de caractere pe "
-                                       "care doriti sa-l cautati: ")
-                        filme = self.filmService.cautareTextFilm(string)
-                        if not filme:
-                            print("Nu s-au gasit filme !")
+                        string = input("Enter the string you want to search: ")
+                        movies = self.movieService.searchTextMovie(string)
+                        if not movies:
+                            print("No movies found.")
                         else:
-                            for film in filme:
-                                print(film)
+                            for movie in movies:
+                                print(movie)
                     elif opt == "2":
-                        string = input("Dati sirul de caractere pe care "
-                                       "doriti sa-l cautati: ")
-                        carduri = self.cardService.cautareTextCard(string)
-                        if not carduri:
-                            print("Nu s-au gasit carduri !")
+                        string = input("Enter the string you want to search: ")
+                        cards = self.cardService.searchTextCard(string)
+                        if not cards:
+                            print("No cards found. ")
                         else:
-                            for card in carduri:
+                            for card in cards:
                                 print(card)
                     elif opt.lower() == "x":
                         break
                     else:
-                        print("Optiune gresita! Reincercati ")
-            elif optiune == "2":
-                self.uiAfisareRezervariIntervalOrar()
-            elif optiune == "3":
-                self.uiOrdonareFilmeDescDupaRezervari()
-            elif optiune == "4":
-                self.uiOrdonareDescCarduriDupaPuncte()
-            elif optiune == "5":
-                self.uiStergereRezervariIntervalZile()
-            elif optiune == "6":
-                self.uiAdaugaValoarePuncte()
-            elif optiune.lower() == "s":
-                self.uiStergereInCascada()
-            elif optiune.lower() == "r":
-                self.uiGenereazaFilmeRandom()
-            elif optiune.lower() == "x":
+                        print("Wrong option, please retry!")
+            elif option == "2":
+                self.uiReservationsBetweenHours()
+            elif option == "3":
+                self.uiOrderMoviesByReservationsReverse()
+            elif option == "4":
+                self.uiOrderedCardsByPointsReverse()
+            elif option == "5":
+                self.uiDeleteReservationsBetweenDates()
+            elif option == "6":
+                self.uiAddPoints()
+            elif option.lower() == "s":
+                self.uiDeleteInCascade()
+            elif option.lower() == "r":
+                self.uiGenerateRandomMovies()
+            elif option.lower() == "x":
                 break
             else:
                 print("Optiune gresita ! Reincercati ")
 
-    def uiOrdonareFilmeDescDupaRezervari(self):
-        if not self.rezervareService.ordonareFilmeDescDupaRezervari():
-            print("Nu exista filme de afisat !")
+    def uiOrderMoviesByReservationsReverse(self):
+        if not self.reservationService.orderMoviesByReservationsReverse():
+            print("No movies found.")
         else:
-            for film in self.rezervareService.ordonareFilmeDescDupaRezervari():
-                print(film)
+            for movie in self.reservationService.orderMoviesByReservationsReverse():
+                print(movie)
 
-    def uiAfisareRezervariIntervalOrar(self):
+    def uiReservationsBetweenHours(self):
         try:
-            ora1 = datetime.datetime.strptime(input("Dati prima ora: "),
-                                              "%H:%M")
-            ora2 = datetime.datetime.strptime(input("Dati a doua ora: "),
-                                              "%H:%M")
-            rezultat = []
-            self.rezervareService.\
-                afisareRezervariIntervalOrar(ora1, ora2,
-                                             self.rezervareService.getAll(),
-                                             rezultat)
-            if not rezultat:
-                print("Nu exista rezervari in intervalul specificat !")
+            hour1 = datetime.datetime.strptime(input("Enter the first hour: "), "%H:%M")
+            hour2 = datetime.datetime.strptime(input("Enter the second hour: "), "%H:%M")
+            result = []
+            self.reservationService.reservationsBetweenHours(hour1, hour2, self.reservationService.getAll(), result)
+            if not result:
+                print("No reservations found. ")
             else:
-                for rezervare in rezultat:
-                    print(rezervare)
+                for reservation in result:
+                    print(reservation)
         except ValueError as ve:
             print(ve)
         except Exception as e:
             print(e)
 
-    def uiStergereRezervariIntervalZile(self):
+    def uiDeleteReservationsBetweenDates(self):
         try:
-            data1 = datetime.datetime.strptime(input("Dati prima data: "),
-                                               "%d.%m.%Y")
-            data2 = datetime.datetime.strptime(input("Dati a doua data: "),
-                                               "%d.%m.%Y")
-            self.rezervareService.stergereRezervariIntervalZile(data1, data2)
-            print("Rezervarile din intervalul specificat au fost sterse !")
+            date1 = datetime.datetime.strptime(input("Enter the first date: "), "%d.%m.%Y")
+            date2 = datetime.datetime.strptime(input("Enter the second date: "), "%d.%m.%Y")
+            self.reservationService.deleteReservationsBetweenDates(date1, date2)
+            print("Reservations deleted. ")
         except ValueError as ve:
             print(ve)
         except Exception as e:
             print(e)
 
-    def uiAdaugaValoarePuncte(self):
+    def uiAddPoints(self):
         try:
-            data1 = datetime.datetime.strptime(input("Dati prima data: "),
-                                               "%d.%m.%Y")
-            data2 = datetime.datetime.strptime(input("Dati a doua data: "),
-                                               "%d.%m.%Y")
-            valoare = int(input("Dati nr de puncte pe care doriti sa-l "
-                                "adaugati "
-                                "cardurilor din intervalul specificat: "))
-            rezultat = self.cardService.adaugaValoarePuncte(
-                data1, data2, valoare)
-            if not rezultat:
-                print("Nu exista carduri in intervalul specificat !")
+            date1 = datetime.datetime.strptime(input("Enter the first date: "), "%d.%m.%Y")
+            date2 = datetime.datetime.strptime(input("Dati a doua data: "), "%d.%m.%Y")
+            value = int(input("Enter the number of points you want to add: "))
+            result = self.cardService.addPoints(date1, date2, value)
+            if not result:
+                print("No cards between the specified dates. ")
             else:
-                print(f"Au fost adaugate {valoare} puncte la "
-                      f"cardurile a caror"
-                      f" zi de nastere se afla in intervalul "
-                      f"{data1.date()} - "
-                      f"{data2.date()}")
+                print(f"Points were added")
         except ValueError as ve:
             print(ve)
         except Exception as e:
             print(e)
 
-    def uiStergereInCascada(self):
+    def uiDeleteInCascade(self):
         try:
-            idFilm = input("Dati id-ul filmului pe"
-                           " care doriti sa-l stergeti: ")
-            self.rezervareService.stergereInCascada(idFilm)
+            idMovie = input("Enter the movie id that you want to delete: ")
+            self.reservationService.deleteInCascade(idMovie)
         except ValueError as ve:
             print(ve)
         except Exception as e:

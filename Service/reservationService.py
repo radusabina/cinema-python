@@ -73,82 +73,53 @@ class ReservationService:
         """
         orders the movies in reverse by the number of reservations
         """
-        filmeRezervate = {film.idEntitate: 0 for film in
-                          self.filmRepository.read()}
-        for rezervare in self.rezervareRepository.read():
-            filmeRezervate[rezervare.idFilm] += 1
-        return list(map(lambda x: self.filmRepository.read(x), mySorted(
-            list(filmeRezervate), key=lambda x: filmeRezervate[x],
-            reverse=True)))
+        reservedMovies = {movie.idEntity: 0 for movie in self.movieRepository.read()}
+        for reservation in self.reservationRepository.read():
+            reservedMovies[reservation.idMovie] += 1
+        return list(map(lambda x: self.movieRepository.read(x), mySorted(
+            list(reservedMovies), key=lambda x: reservedMovies[x], reverse=True)))
 
-    def afisareRezervariIntervalOrar(self, ora1: datetime, ora2: datetime,
-                                     rezervari: list, rezultat: list) -> List:
+    def reservationsBetweenHours(self, hour1: datetime, hour2: datetime,
+                                 reservations: list, result: list) -> List:
         """
-        Returneaza o lista cu rezervarile dintr-un anumit interval orar
-        :param ora1: prima ora
-        :param ora2: a doua ora
-        :param rezervari: rezervarile existente
-        :param rezultat: o lista cu rezervarile din intervalul specificat
-        :return: o lista cu rezervarile dintre cele 2 ore date
+        returns a list with the reservations between two hours
         """
-        """
-        return list(filter(lambda x: x if ora1 <= datetime.strptime(x.ora,
-                                                                    "%H:%M")
-                           <= ora2 else None, self.rezervareRepository.read()))
-                           """
-        if ora1 > ora2:
-            ora1, ora2 = ora2, ora1
-        if len(rezervari) == 1:
-            if ora1 <= datetime.strptime(rezervari[0].ora, "%H:%M") <= ora2:
-                rezultat.append(rezervari[0])
+        if hour1 > hour2:
+            hour1, hour2 = hour2, hour1
+        if len(reservations) == 1:
+            if hour1 <= datetime.strptime(reservations[0].hour, "%H:%M") <= hour2:
+                result.append(reservations[0])
         else:
-            if ora1 <= datetime.strptime(rezervari[0].ora, "%H:%M") <= ora2:
-                rezultat.append(rezervari[0])
-            self.afisareRezervariIntervalOrar(ora1, ora2, rezervari[1:],
-                                              rezultat)
-        return rezultat
+            if hour1 <= datetime.strptime(reservations[0].hour, "%H:%M") <= hour2:
+                result.append(reservations[0])
+            self.reservationsBetweenHours(hour1, hour2, reservations[1:], result)
+        return result
 
-    def stergereRezervariIntervalZile(self, data1: datetime, data2: datetime)\
-            -> List:
+    def deleteReservationsBetweenDates(self, date1: datetime, date2: datetime) -> List:
         """
-        Sterge rezervarile dintr-un anumit interval de zile speicificat
-        :param data1: prima data
-        :param data2: a doua data
-        :return: o lista cu rezervarile ramase
+        deletes the reservations between two dates
         """
-        rezervariDeSters = list(filter(lambda x: x if data1 <=
-                                       datetime.strptime(x.data,
-                                                         "%d.%m.%Y")
-                                       <= data2 else None,
-                                       self.rezervareRepository.read()))
-        for rezervare in rezervariDeSters:
-            self.rezervareRepository.sterge(rezervare.idEntitate)
+        reservationsToDelete = list(filter(lambda x: x if date1 <= datetime.strptime(x.date, "%d.%m.%Y")
+                                           <= date2 else None, self.reservationRepository.read()))
+        for reservation in reservationsToDelete:
+            self.reservationRepository.delete(reservation.idEntity)
 
-        self.undoRedoService.addUndoOperation(MultiDeleteOperation(
-            self.rezervareRepository, rezervariDeSters))
-        return self.rezervareRepository.read()
+        self.undoRedoService.addUndoOperation(MultiDeleteOperation(self.reservationRepository, reservationsToDelete))
+        return self.reservationRepository.read()
 
-    def stergereInCascada(self, idFilm: str) -> None:
-        """
-        Sterge filmul cu id-ul introdus si toate
-        rezervarile facute la acest film
-        :param idFilm: id-ul filmului de sters
-        :return: None
-        """
+    def deleteInCascade(self, idMovie: str) -> None:
         cascade = []
+        if self.movieRepository.read(idMovie) is None:
+            raise MovieError("There is no film with that id!")
 
-        if self.filmRepository.read(idFilm) is None:
-            raise FilmError("Nu exista un film cu id-ul "
-                            "specificat de sters !")
+        for reservation in self.reservationRepository.read():
+            if reservation.idFilm == idMovie:
+                cascade.append(reservation)
+                self.reservationRepository.delete(reservation.idEntity)
 
-        for rezervare in self.rezervareRepository.read():
-            if rezervare.idFilm == idFilm:
-                cascade.append(rezervare)
-                self.rezervareRepository.sterge(rezervare.idEntitate)
+        movie = self.movieRepository.read(idMovie)
+        cascade.append(movie)
+        self.movieRepository.delete(movie.idEntity)
 
-        film = self.filmRepository.read(idFilm)
-        cascade.append(film)
-        self.filmRepository.sterge(film.idEntitate)
-
-        self.undoRedoService.addUndoOperation(CascadaDeleteOperation(
-            self.filmRepository, self.rezervareRepository, cascade))
+        self.undoRedoService.addUndoOperation(DeleteOperationCascade(self.movieRepository, self.reservationRepository,
+                                                                     cascade))

@@ -9,7 +9,7 @@ from Repository.repository import Repository
 from Service.undoRedoService import UndoRedoService
 
 
-class FilmService:
+class MovieService:
 
     def __init__(self, movieRepository: Repository, movieValidator: MovieValidator, undoRedoService: UndoRedoService):
         self.movieRepository = movieRepository

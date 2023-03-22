@@ -1,10 +1,10 @@
-from Domain.clientCardValidator import CardClientValidator
-from Domain.movieValidator import FilmValidator
+from Domain.clientCardValidator import ClientCardValidator
+from Domain.movieValidator import MovieValidator
 from Repository.repositoryJson import RepositoryJson
-from Service.cardClientService import CardClientService
-from Service.filmGenerator import FilmGenerator
-from Service.filmService import FilmService
-from Service.rezervareService import RezervareService
+from Service.clientCardService import ClientCardService
+from Service.movieGenerator import MovieGenerator
+from Service.movieService import MovieService
+from Service.reservationService import ReservationService
 from Service.undoRedoService import UndoRedoService
 from Tests.testAll import testAll
 from UserInterface.consola import Console
@@ -16,29 +16,24 @@ def main():
 
     undoRedoService = UndoRedoService()
 
-    filmRepository = RepositoryJson("filme.json")
-    filmValidator = FilmValidator()
-    filmService = FilmService(filmRepository, filmValidator, undoRedoService)
+    movieRepository = RepositoryJson("movies.json")
+    movieValidator = MovieValidator()
+    movieService = MovieService(movieRepository, movieValidator, undoRedoService)
 
-    cardRepository = RepositoryJson("carduri.json")
-    cardValidator = CardClientValidator()
-    cardService = CardClientService(cardRepository, cardValidator,
-                                    undoRedoService)
+    cardRepository = RepositoryJson("cards.json")
+    cardValidator = ClientCardValidator()
+    cardService = ClientCardService(cardRepository, cardValidator, undoRedoService)
 
-    rezervareRepository = RepositoryJson("rezervari.json")
-    rezervareService = RezervareService(rezervareRepository,
-                                        filmRepository, cardRepository,
-                                        undoRedoService)
+    reservationRepository = RepositoryJson("reservations.json")
+    reservationService = ReservationService(reservationRepository, movieRepository, cardRepository, undoRedoService)
 
-    filmGeneratorRepository = RepositoryJson("filmeRandom.json")
-    filmGeneratorValidator = FilmValidator()
-    filmGeneratorService = FilmGenerator(filmGeneratorRepository,
-                                         filmGeneratorValidator)
-    clear_file("filmeRandom.json")
+    movieGeneratorRepository = RepositoryJson("randomMovies.json")
+    movieGeneratorValidator = MovieValidator()
+    movieGeneratorService = MovieGenerator(movieGeneratorRepository, movieGeneratorValidator)
+    clear_file("randomMovies.json")
 
-    consola = Console(filmService, cardService, rezervareService,
-                      filmGeneratorService, undoRedoService)
-    consola.runMenu()
+    console = Console(movieService, cardService, reservationService, movieGeneratorService, undoRedoService)
+    console.runMenu()
 
 
 if __name__ == "__main__":

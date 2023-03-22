@@ -1,78 +1,76 @@
-from Domain.clientCard import CardClient
-from Domain.movie import Film
-from Domain.reservation import Rezervare
+from Domain.clientCard import ClientCard
+from Domain.movie import Movie
+from Domain.reservation import Reservation
 from Repository.repositoryJson import RepositoryJson
 from utils import clear_file
 
 
-def testFilmRepository():
-    repo = RepositoryJson("testFilmRepository.json")
+def testMovieRepository():
+    repo = RepositoryJson("testMovieRepository.json")
 
-    clear_file("testFilmRepository.json")
-    repo.adauga(Film("1", "Titanic", 1997, 10, "da"))
-    repo.adauga(Film("2", "Dune", 2021, 13, "da"))
+    clear_file("testMovieRepository.json")
+    repo.add(Movie("1", "Titanic", 1997, 10, "yes"))
+    repo.add(Movie("2", "Dune", 2021, 13, "yes"))
     assert len(repo.read()) == 2
-    assert repo.read("1").titlu == "Titanic"
-    assert repo.read("1").anAparitie == 1997
-    assert repo.read("1").pretBilet == 10
-    assert repo.read("1").inProgram == "da"
-    repo.modifica(Film("1", "Dune", 2021, 19.99, "da"))
+    assert repo.read("1").title == "Titanic"
+    assert repo.read("1").releaseYear == 1997
+    assert repo.read("1").ticketPrice == 10
+    assert repo.read("1").inProgram == "yes"
+    repo.update(Movie("1", "Dune", 2021, 19.99, "yes"))
     assert len(repo.read()) == 2
-    assert repo.read("1").titlu == "Dune"
-    assert repo.read("1").anAparitie == 2021
-    assert repo.read("1").pretBilet == 19.99
-    assert repo.read("1").inProgram == "da"
-    repo.sterge("1")
+    assert repo.read("1").title == "Dune"
+    assert repo.read("1").releaseYear == 2021
+    assert repo.read("1").ticketPrice == 19.99
+    assert repo.read("1").inProgram == "yes"
+    repo.delete("1")
     assert len(repo.read()) == 1
-    repo.sterge("2")
+    repo.delete("2")
     assert len(repo.read()) == 0
 
 
 def testCardRepository():
     repo = RepositoryJson("testCardRepository.json")
-    repo.adauga(CardClient("1", "Ureche", "Grigore", "5670429873323",
-                           "29.04.1967", "14.12.2021", 30))
+    repo.add(ClientCard("1", "Ureche", "Grigore", "5670429873323", "29.04.1967", "14.12.2021", 30))
     assert len(repo.read()) == 1
-    assert repo.read("1").nume == "Ureche"
-    assert repo.read("1").prenume == "Grigore"
+    assert repo.read("1").name == "Ureche"
+    assert repo.read("1").surname == "Grigore"
     assert repo.read("1").CNP == "5670429873323"
-    assert repo.read("1").dataNasterii == "29.04.1967"
-    assert repo.read("1").dataInregistrarii == "14.12.2021"
-    assert repo.read("1").puncteCumulate == 30
-    repo.modifica(CardClient("1", "Ban", "Betina", "6985678892531",
-                             "28.05.2002", "14.03.2021", 0))
+    assert repo.read("1").birthDate == "29.04.1967"
+    assert repo.read("1").registrationDate == "14.12.2021"
+    assert repo.read("1").points == 30
+    repo.update(ClientCard("1", "Ban", "Betina", "6985678892531", "28.05.2002", "14.03.2021", 0))
     assert len(repo.read()) == 1
-    assert repo.read("1").nume == "Ban"
-    assert repo.read("1").prenume == "Betina"
+    assert repo.read("1").name == "Ban"
+    assert repo.read("1").surname == "Betina"
     assert repo.read("1").CNP == "6985678892531"
-    assert repo.read("1").dataNasterii == "28.05.2002"
-    assert repo.read("1").dataInregistrarii == "14.03.2021"
-    assert repo.read("1").puncteCumulate == 0
-    repo.sterge("1")
+    assert repo.read("1").birthDate == "28.05.2002"
+    assert repo.read("1").registrationDate == "14.03.2021"
+    assert repo.read("1").points == 0
+    repo.delete("1")
     assert len(repo.read()) == 0
 
 
-def testRepositoryRezervare():
-    repo = RepositoryJson("testRezervareRepository.json")
-    repo.adauga(Rezervare("1", "2", "0", "17.11.2021", "13:00"))
+def testReservationRepository():
+    repo = RepositoryJson("testReservationRepository.json")
+    repo.add(Reservation("1", "2", "0", "17.11.2021", "13:00"))
     assert len(repo.read()) == 1
-    assert repo.read("1").idEntitate == "1"
-    assert repo.read("1").idFilm == "2"
-    assert repo.read("1").idCard == "0"
-    assert repo.read("1").data == "17.11.2021"
-    assert repo.read("1").ora == "13:00"
-    repo.modifica(Rezervare("1", "2", "0", "13.12.2021", "14:00"))
+    assert repo.read("1").idEntity == "1"
+    assert repo.read("1").idMovie == "2"
+    assert repo.read("1").idClientCard == "0"
+    assert repo.read("1").date == "17.11.2021"
+    assert repo.read("1").hour == "13:00"
+    repo.update(Reservation("1", "2", "0", "13.12.2021", "14:00"))
     assert len(repo.read()) == 1
-    assert repo.read("1").idEntitate == "1"
-    assert repo.read("1").idFilm == "2"
-    assert repo.read("1").idCard == "0"
-    assert repo.read("1").data == "13.12.2021"
-    assert repo.read("1").ora == "14:00"
-    repo.sterge("1")
+    assert repo.read("1").idEntity == "1"
+    assert repo.read("1").idMovie == "2"
+    assert repo.read("1").idClientCard == "0"
+    assert repo.read("1").date == "13.12.2021"
+    assert repo.read("1").hour == "14:00"
+    repo.delete("1")
     assert len(repo.read()) == 0
 
 
 def testAllRepositories():
-    testFilmRepository()
+    testMovieRepository()
     testCardRepository()
-    testRepositoryRezervare()
+    testReservationRepository()
